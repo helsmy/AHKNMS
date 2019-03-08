@@ -5,4 +5,4 @@ ver 0.1
 
 加入了 main.ahk 和 paser.ahk 
 
-大概把 paser.ahk 写完了
+大概把 paser.ahk 写完了，还没有测试过
