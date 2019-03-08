@@ -180,16 +180,16 @@ class Paser(Object)
 		else if token.types == RLOW
 		{
 			this.Eat(RLOW)
-			this.paern_finish = 0
+			this.paern_finish = 1
 		}
 		else if token.types == LLOW
 		{
 			this.Eat(LLOW)
-			this.paern_finish = 1
+			this.paern_finish = 0
 			return [Pitch(), token.values]
 		}
 		
-		if this.paern_finish == 0
+		if this.paern_finish
 			this.ErrInvalidSyntax()
 		
 	}
