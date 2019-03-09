@@ -1,9 +1,14 @@
 # AHKNMS
-A number music sheet analysor made by autohotkey
+A number music sheet analysor made by autohotkey. <br>
+Aim to make a simple sheet key changer with a GUI.<br>
+It will pase a number music sheet into a list as follow:
 
-ver 0.1
+```autohotkey
+    [["Pitch"， "Range", "duration"], ......]
+```
 
-add main.ahk
-add paser.ahk
+### ver 0.0.1
 
-initially completed paser.ahk
+1. add main.ahk
+2. add paser.ahk
+3. initially completed paser.ahk
