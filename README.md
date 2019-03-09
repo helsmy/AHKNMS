@@ -10,5 +10,5 @@ It will parse a number music sheet into a list as follow:
 ### ver 0.0.1
 
 1. add main.ahk
-2. add paser.ahk
+2. add parser.ahk
 3. initially completed paser.ahk
