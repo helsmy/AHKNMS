@@ -11,4 +11,4 @@
 ### ver 0.0.1
 
 1. 加入了 main.ahk 和 paser.ahk <br>
-2. 大概把 paser.ahk 写完了，还没有测试过
+2. 大概把 parser.ahk 写完了，还没有测试过
