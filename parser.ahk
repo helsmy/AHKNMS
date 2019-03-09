@@ -127,7 +127,7 @@ class Lexer(Object)
 	}
 }
 
-class Paser(Object)
+class Parser(Object)
 {
 	__new(this, lexer)
 	{
