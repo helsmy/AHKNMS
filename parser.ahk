@@ -3,21 +3,24 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; 声明初始的一些值，这里有点问题
-static NOTE, HALFUP, HALFDOWN, RHIGE, LHIGH, RLOW, LLOW, EOF = "INTEGER", "#", "b", "[", "]"， "("， ")", "EOF"
+; 		现在还没有测试过 
+; '''	HAVEN'T BEEN TESTED		'''
 
-static notelist := ["C", "#C", "D", "#D", "E", "F", "#F", "G", "#G", "A", "#A", "B"]
+; 声明初始的一些值
+global NOTE :="INTEGER", HALFUP := "#", HALFDOWN := "b", RHIGE := "[", LHIGH := "]", RLOW := "(", LLOW := ")", EOF := "EOF" 
+
+global notelist := ["C", "#C", "D", "#D", "E", "F", "#F", "G", "#G", "A", "#A", "B"]
 
 ; 乐谱列表[[12平均律,音区，时值(暂且设置为0)]，...]
 
 
-class Token(Object)
+class Token
 {
-	__new(this, types, values)
+	__New(atypes, avalues)
 	{
 		; 这里定义token的类型和值
-		this.types := types
-		this.values := values
+		this.types := atypes
+		this.values := avalues
 	}
 	
 	types[]
@@ -37,9 +40,9 @@ class Token(Object)
 	}
 }
 
-class Lexer(Object)
+class Lexer
 {
-	__new(this, txt)
+	__New(txt)
 	{
 		; 这里接受输入的字符串
 		this.txt := txt
@@ -51,43 +54,45 @@ class Lexer(Object)
 	
 	; 这里要定义返回的异常
 	; Error(this){ TODO }
-	ErrCharIsNotNote(this)
+	ErrCharIsNotNote()
 	{
 		; 这里可能有点问题
 		Throw Exception("InvalidCharacter", -1, Format("Wrong Character in {1:d}", this.ptr))
 	}
 	
-	Advance(this)
+	Advance()
 	{
 		; 用来让指针向前1次
 		this.ptr := this.ptr  + 1
 		if this.ptr > StrLen(this.txt)
-			this.current_char := "" ;ahk没有空值真是有趣，不知道space类型会不会重复判断
+			this.current_char := "" ; ahk没有空值真是有趣，不知道space类型会不会重复判断
 		else
 			this.current_char := this.txt[this.ptr]
 	}
 	
-	SkipWhitesspace(this)
+	SkipWhitesspace()
 	{
 		; 跳过空白
 		while(this.current_char != "" and this.current_char is Space)
 			this.Advance()
 	}
 	
-	Int(this)
+	Int()
 	{
-		;返回一个整数，代表音高，并拒绝超过7的数字，超过7就抛出异常
+		; 返回一个整数，代表音高，并拒绝超过7的数字，超过7就抛出异常
 		result := ""
 		
 		if this.current_char is integer
-			result := Integer(result)
-		if result > 7
-			this.ErrCharIsNotNote()
-		else
-			return reslust
+		{
+			if result > 7
+				this.ErrCharIsNotNote()
+			else
+				return reslust
+		}
+		
 	}
 	
-	GetNextToken(this)
+	GetNextToken()
 	{
 		while(this.current_char != "")
 		{
@@ -100,58 +105,60 @@ class Lexer(Object)
 			this.Advance()
 			
 			if this.current_char is Integer
-				return Token(NOTE, this.Int())
+				return New Token(NOTE, this.Int())
 			
 			; 直接返回音区，默认中央C为C4,用 13 这种表示得到开始的符号
 			if this.current_char == "("
-				return Token(RLOW, 13)
+				return New Token(RLOW, 13)
 			
 			if this.current_char == ")"
-				return Token(LLOW, 3)
+				return New Token(LLOW, 3)
 			
 			if this.current_char == "["
-				return Token(RHIGH, 15)
+				return New Token(RHIGH, 15)
 			
 			if this.current_char == "]"
-				return Token(LHIGH, 5)
+				return New Token(LHIGH, 5)
 			
 			; 直接返回数字这样方便后续直接计算音高
 			if this.current_char == "#"
-				return Token(HALFUP, 1)
+				return New Token(HALFUP, 1)
 			
 			if this.current_char == "b"
-				return Token(HALFDOWN, -1)
+				return New Token(HALFDOWN, -1)
+			
+			this.ErrCharIsNotNote()
 		}
 		
-		return Token(EOF, "")
+		return New Token(EOF, "")
 	}
 }
 
-class Parser(Object)
+class Parser
 {
-	__new(this, lexer)
+	__New(lexer)
 	{
 		this.lexer := lexer
 		; 将当前的token设置到输入的第一个
 		this.current_token := this.lexer.GetNextToken()
-		this.paern_finish = 0
+		this.paern_finish := 0
 	}
 	
-	ErrInvalidSyntax(this)
+	ErrInvalidSyntax()
 	{
 		Throw Exception("InvalidSyntax",-1,this.ptr)
 	}
 	
-	Eat(this, TokenTypes)
+	Eat(TokenTypes)
 	{
 		; 对比得到的类型，相符就消费掉，不符就抛出异常
 		if this.current_token == TokenTypes
-			this.current_token = this.lexer.GetNextToken()
+			this.current_token := this.lexer.GetNextToken()
 		else
 			this.ErrInvalidSyntax()
 	}
 	
-	Pitch(this)
+	Pitch()
 	{
 		; 音高  ： NUMBER  
 		token := this.current_token
@@ -162,39 +169,39 @@ class Parser(Object)
 		}
 	}
 	
-	Notes(this)
+	Notes()
 	{
 		; 音区 ： 括号  只在右括号的时候返回感觉有点隐患，抛出个语法错误异常好了
 		
 		if token.types == RHIGE
 		{
 			this.Eat(RHIGE)
-			this.paern_finish = 1
+			this.paern_finish := 1
 		}
 		else if token.types == LHIGH
 		{
 			this.Eat(LHIGH)
-			this.paern_finish = 0
-			return [Pitch(), token.values]
+			this.paern_finish := 0
+			return [this.Pitch(), token.values]
 		}
 		else if token.types == RLOW
 		{
 			this.Eat(RLOW)
-			this.paern_finish = 1
+			this.paern_finish := 1
 		}
 		else if token.types == LLOW
 		{
 			this.Eat(LLOW)
-			this.paern_finish = 0
-			return [Pitch(), token.values]
+			this.paern_finish := 0
+			return [this.Pitch(), token.values]
 		}
 		
-		if this.paern_finish
+		if this.paern_finish == 0
 			this.ErrInvalidSyntax()
 		
 	}
 	
-	Sheet(this)
+	Sheet()
 	{
 		
 		result := []
