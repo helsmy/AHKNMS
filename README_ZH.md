@@ -12,3 +12,8 @@
 
 1. 加入了 main.ahk 和 paser.ahk <br>
 2. 大概把 parser.ahk 写完了，还没有测试过
+
+### ver 0.0.2
+
+1. 修了下parser.ahk，还没有测试过解析功能
+2. 让main.ahk有个Gui的helloworld了
