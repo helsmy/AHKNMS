@@ -1,5 +1,8 @@
 global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")"
-; MsgBox, % Format("global LHIGH : {1:s} RHIGH : {2:s}", LHIGH, RHIGH)
+; stand form : notelist := [[pitch, range, duration], ...]
+; duration 还没有实现格式与解析先置0
+; duration is temporarily set to 0
+
 class Token
 {
     __New(atypes, avalues)
