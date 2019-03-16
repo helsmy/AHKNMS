@@ -1,5 +1,3 @@
-; 	现在还没有测试过 
-; '''	HAVEN'T BEEN TESTED		'''
 global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")"
 ; MsgBox, % Format("global LHIGH : {1:s} RHIGH : {2:s}", LHIGH, RHIGH)
 class Token
@@ -16,7 +14,6 @@ class Lexer
 {
     __New(str)
     {
-        ; msgbox, new class test
         this.str := str
         this.ptr := 1
         this.current_char := SubStr(this.str, 1, 1)
@@ -25,7 +22,9 @@ class Lexer
     SkipWhitesspace()
     {
         ; 跳过空白
+        msgbox, SkipWhitesspace called
         this.Advance()
+        msgbox, SkipWhitesspace Advance called
     }
     
     Advance()
@@ -40,14 +39,12 @@ class Lexer
     
     GetNextToken()
     {
-
         magic1:
         cc := this.current_char
         t := New Token("", "")
         
         while(cc != "")
         {
-            
             if cc is Space
             {
                 this.Advance()
@@ -70,12 +67,22 @@ class Lexer
             
             if(cc == RHIGH)
             {
-                this.Advance()
                 t.types := RHIGH
             }
             
+            if(cc == LLOW)
+            {
+                this.Advance()
+                t.types := LLOW
+            }
+            
+            if(cc == RLOW)
+            {
+                this.Advance()
+                t.types := RLOW
+            }
+            
             t.values := cc
-            msgbox, % Format("GetNextToken t type : {1:s} values : {2:s}", t.types, t.values)
             return t
         }
         t.types := EOF
@@ -90,7 +97,6 @@ class Parser
     {
         this.lexer := new Lexer(str)
         this.current_char := this.lexer.GetNextToken()
-        msgbox, % this.current_char.values
     }
     
     ErrInvalidSyntax()
@@ -115,7 +121,6 @@ class Parser
         {
             this.Eat(NOTE)
             r := [token.values, ranges, 0]
-            MsgBox, % Format("value : {1:d} ranges : {2:d} time : {3:d}", r*)
             return r
         }
     }
@@ -128,18 +133,18 @@ class Parser
         if token.types == LHIGH
         {
             this.Eat(LHIGH)
-            result := this.Pitch(3)
+            result := this.Pitch(5)
             this.Eat(RHIGH)
         }
         else if token.types == LLOW
         {
             this.Eat(LLOW)
-            result := this.Pitch(5)
+            result := this.Pitch(3)
             this.Eat(RLOW)
         }
         else if token.types == NOTE
         {
-            result := this.Pitch()
+            result := this.Pitch(4)
         }
         return result
     }
@@ -149,7 +154,6 @@ class Parser
         result := []
         while(this.current_char.types != EOF)
         {
-            this.current_char := this.lexer.GetNextToken()
             n := this.Notes()
             result.Push(n)
         }
