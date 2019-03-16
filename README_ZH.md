@@ -17,3 +17,7 @@
 
 1. 修了下parser.ahk，还没有测试过解析功能
 2. 让main.ahk有个Gui的helloworld了
+
+### ver 0.0.3
+
+1. parser.ahk终于可以正确解析了，是我太菜了
