@@ -4,7 +4,7 @@ Aim to make a simple sheet key changer with a simple GUI.<br>
 It will parse a number music sheet into a list as follow:
 
 ```autohotkey
-    [["Pitch"， "Range", "duration"], ......]
+    [["Pitch"， "Range", "Duration"], ......]
 ```
 
 ### ver 0.0.1
