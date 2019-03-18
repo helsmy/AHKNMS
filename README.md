@@ -21,3 +21,7 @@ It will parse a number music sheet into a list as follow:
 ### ver 0.0.3
 
 1. parser is usable now.
+
+### ver 0.0.4
+
+1. parser can parse "#" and "b"
