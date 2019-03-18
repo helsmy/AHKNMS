@@ -1,4 +1,5 @@
-global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")"
+global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")", HALFUP := 1, HALFDOWN := -1
+
 ; stand form : notelist := [[pitch, range, duration], ...]
 ; duration 还没有实现格式与解析先置0
 ; duration is temporarily set to 0
@@ -18,16 +19,20 @@ class Lexer
     __New(str)
     {
         this.str := str
+        this.char_list := {LHIGH: "[", RHIGH: "]", LLOW: "(", RLOW: ")", 1: "#", -1: "b", NOTE: "INT", EOF: "EOF"}
         this.ptr := 1
         this.current_char := SubStr(this.str, 1, 1)
+    }
+    
+    ErrInvalidchar()
+    {
+        Throw Exception("InvalidCharacter", -1, this.ptr)
     }
     
     SkipWhitesspace()
     {
         ; 跳过空白
-        msgbox, SkipWhitesspace called
         this.Advance()
-        msgbox, SkipWhitesspace Advance called
     }
     
     Advance()
@@ -54,37 +59,28 @@ class Lexer
                 goto magic1        ; 我用goto我有罪，是我太菜了
             }
             
-            if cc is digit
+            else if cc is digit
             {
                 this.Advance()
                 t.types := NOTE
                 
             }
-            ; 直接返回音区，默认中央C为C4,用 13 这种表示得到开始的符号
+            ; 直接返回音区，默认中央C为C4
             
-            if(cc = LHIGH)
+            else
             {
-                this.Advance()
-                t.types := LHIGH
+                for k,v in this.char_list
+                {
+                    if(v == this.current_char)
+                    {
+                        this.Advance()
+                        t.types := k
+                        goto setvalue    ; 我用goto我有罪，是我太菜了
+                    }
+                }
+                this.ErrInvalidchar()
             }
-            
-            if(cc == RHIGH)
-            {
-                t.types := RHIGH
-            }
-            
-            if(cc == LLOW)
-            {
-                this.Advance()
-                t.types := LLOW
-            }
-            
-            if(cc == RLOW)
-            {
-                this.Advance()
-                t.types := RLOW
-            }
-            
+            setvalue:
             t.values := cc
             return t
         }
@@ -100,11 +96,12 @@ class Parser
     {
         this.lexer := new Lexer(str)
         this.current_char := this.lexer.GetNextToken()
+        this.note_dic := {1:1, 2:3, 3:5, 4:6, 5:8, 6:10, 7:12}
     }
     
     ErrInvalidSyntax()
     {
-        Throw Exception("InvalidSyntax", -1, Format("Wrong Character in {1:d} {2:s}", this.lexer.ptr, SubStr(this.txt, this.lexer.ptr, 3)))
+        Throw Exception("InvalidSyntax", -1, Format("Wrong Character in {1:d} SubString : {2:s} {3:s}", this.lexer.ptr-1, SubStr(this.lexer.str, this.lexer.ptr-1, 3), this.current_char.types))
     }
     
     Eat(TokenTypes)
@@ -118,34 +115,38 @@ class Parser
     
     Pitch(ranges := 4)
     {
-        ; 音高  ： NUMBER  
+        ; 音高  ： NUMBER | (#|b)NUMBER 
         token := this.current_char
-        if(token.types == NOTE)
+        half_pitch := 0
+        if(token.types == "1"||token.types == "-1")
         {
-            this.Eat(NOTE)
-            r := [token.values, ranges, 0]
-            return r
-        }
+            this.Eat(token.types)
+            half_pitch := token.types  ; 这里让临时升降记号的types值等于对应的升降半音（1 / -1）
+            token := this.current_char ; 更新token的值，让它指向下一个字符，这个字符应该为数字
+        }            
+        this.Eat(NOTE)
+        r := this.note_dic[token.values] + half_pitch
+        r := [r, ranges, 0]
+        return r
     }
     
     Notes()
     {
         ; 音区 ： 括号  
-        token := this.current_char
         result := []
-        if token.types == LHIGH
+        if this.current_char.types == "LHIGH"
         {
-            this.Eat(LHIGH)
-            result := this.Pitch(5)
-            this.Eat(RHIGH)
-        }
-        else if token.types == LLOW
-        {
-            this.Eat(LLOW)
+            this.Eat("LHIGH")
             result := this.Pitch(3)
-            this.Eat(RLOW)
+            this.Eat("RHIGH")
         }
-        else if token.types == NOTE
+        else if this.current_char.types == "LLOW"
+        {
+            this.Eat("LLOW")
+            result := this.Pitch(3)
+            this.Eat("RLOW")
+        }
+        else ; if this.current_char.types == NOTE||HALFUP||HALFDOWN
         {
             result := this.Pitch(4)
         }
