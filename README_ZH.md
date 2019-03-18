@@ -15,9 +15,14 @@
 
 ### ver 0.0.2
 
-1. 修了下parser.ahk，还没有测试过解析功能
-2. 让main.ahk有个Gui的helloworld了
+1. 修了下 parser.ahk ，还没有测试过解析功能
+2. 让 main.ahk 有个Gui的 helloworld 了
 
 ### ver 0.0.3
 
-1. parser.ahk终于可以正确解析了，是我太菜了
+1. parser.ahk 终于可以正确解析了，是我太菜了
+
+### ver 0.0.4
+
+1. parser.ahk 可以解析临时升降号了
+2. parser 现在会将音高解析成12平均律的12个半音
