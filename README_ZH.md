@@ -10,7 +10,7 @@
 
 ### ver 0.0.1
 
-1. 加入了 main.ahk 和 paser.ahk <br>
+1. 加入了 main.ahk 和 paser.ahk 
 2. 大概把 parser.ahk 写完了，还没有测试过
 
 ### ver 0.0.2
@@ -26,3 +26,8 @@
 
 1. parser.ahk 可以解析临时升降号了
 2. parser 现在会将音高解析成12平均律的12个半音
+
+### ver 0.0.5
+
+1. 加入了 sheet.ahk （用来处理解析到的乐谱）
+2. 改了下 parser.ahk 让parser返回一个 NumSheet 的实例
