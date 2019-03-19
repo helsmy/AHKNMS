@@ -1,3 +1,7 @@
+; PARSER_AHK
+
+#Include sheet.ahk
+
 global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")", HALFUP := 1, HALFDOWN := -1
 
 ; stand form : notelist := [[pitch, range, duration], ...]
@@ -47,7 +51,7 @@ class Lexer
     
     GetNextToken()
     {
-        magic1:
+        refresh:
         cc := this.current_char
         t := New Token("", "")
         
@@ -56,7 +60,7 @@ class Lexer
             if cc is Space
             {
                 this.Advance()
-                goto magic1        ; 我用goto我有罪，是我太菜了
+                goto refresh        ; 我用goto我有罪，是我太菜了
             }
             
             else if cc is digit
@@ -161,6 +165,7 @@ class Parser
             n := this.Notes()
             result.Push(n)
         }
+        result := new NumSheet(result)
         return result
     }
 }
