@@ -31,3 +31,8 @@
 
 1. 加入了 sheet.ahk （用来处理解析到的乐谱）
 2. 改了下 parser.ahk 让parser返回一个 NumSheet 的实例
+
+### ver 0.0.6
+
+1. 可以解析 [PITCH, PITCH, ...] 的类型了
+2. 给sheet.ahk加了 NSPush method 
