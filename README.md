@@ -30,3 +30,8 @@ It will parse a number music sheet into a list as follow:
 
 1. add sheet.ahk (deal with music sheet generate by parser)
 2. fix parser.ahk
+
+### ver 0.0.6
+
+1. add parse support for [PITCH, PITCH, ...]
+2. add NSPush method to sheet.ahk
