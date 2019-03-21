@@ -122,26 +122,30 @@ class Parser
         ; 音高  ： NUMBER | (#|b)NUMBER 
         token := this.current_char
         half_pitch := 0
-        if(token.types == "1"||token.types == "-1")
+        r := []
+        while(token.types == "1"||token.types == "-1"||token.types == NOTE)
         {
-            this.Eat(token.types)
-            half_pitch := token.types  ; 这里让临时升降记号的types值等于对应的升降半音（1 / -1）
+            if(token.types == "1"||token.types == "-1")
+            {
+                this.Eat(token.types)
+                half_pitch := token.types  ; 这里让临时升降记号的types值等于对应的升降半音（1 / -1）
+                token := this.current_char ; 更新token的值，让它指向下一个字符，这个字符应该为数字
+            }            
+            this.Eat(NOTE)
+            r.Push([this.note_dic[token.values] + half_pitch, ranges, 0])
             token := this.current_char ; 更新token的值，让它指向下一个字符，这个字符应该为数字
-        }            
-        this.Eat(NOTE)
-        r := this.note_dic[token.values] + half_pitch
-        r := [r, ranges, 0]
+        }
         return r
     }
     
     Notes()
     {
-        ; 音区 ： 括号  
+        ; 音区 ： [PITCH, PITCH, ...] | (PITCH, PITCH, ...)
         result := []
         if this.current_char.types == "LHIGH"
         {
             this.Eat("LHIGH")
-            result := this.Pitch(3)
+            result := this.Pitch(5)
             this.Eat("RHIGH")
         }
         else if this.current_char.types == "LLOW"
@@ -159,13 +163,12 @@ class Parser
     
     Sheet()
     {
-        result := []
+        result := new NumSheet()
         while(this.current_char.types != EOF)
         {
             n := this.Notes()
-            result.Push(n)
+            result.NSPush(n)
         }
-        result := new NumSheet(result)
         return result
     }
 }
