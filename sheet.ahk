@@ -17,6 +17,15 @@ class NumSheet
         this.KeyShift()
     }
     
+    NSPush(note)
+    {
+        len := note.Count()
+        while(A_Index <= len)
+        {
+            this.sheet.Push(note[A_Index])
+        }
+    }
+    
     GetNote(ordinal := 1)
     {
         return this.sheet[ordinal]
