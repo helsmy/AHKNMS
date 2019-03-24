@@ -11,10 +11,11 @@
 class NumSheet
 {
     ; 乐谱类
-    __New(s := "")
+    __New()
     {
-        this.sheet := s
-        this.KeyShift()
+        this.sheet := []
+        this.len := this.sheet.Count()
+        this.note_dic := {1:1,2:"#1",3:2,4:"#2",5:3,6:4,7:"#4",8:5,9:"#5",10:6,11:"#6",12:7}
     }
     
     NSPush(note)
@@ -24,6 +25,7 @@ class NumSheet
         {
             this.sheet.Push(note[A_Index])
         }
+        this.len += len
     }
     
     GetNote(ordinal := 1)
@@ -34,8 +36,7 @@ class NumSheet
     KeyShift(key := 0)
     {
         ; 移key
-        len := this.sheet.Count()
-        while(A_Index <= len)
+        while(A_Index <= this.len)
         {
             this.sheet[A_Index][1] += key
             if this.sheet[A_Index][1] > 12
@@ -55,15 +56,14 @@ class NumSheet
     {
         ; 回写成数字谱
         str_sheet := ""
-        len := this.sheet.Count()
-        while(A_Index <= len)
+        while(A_Index <= this.len)
         {
             if this.sheet[A_Index][2] = 3
-                str_sheet .= Format("({1:s})", this.sheet[A_Index][1])
+                str_sheet .= Format("({1:s})", this.note_dic[this.sheet[A_Index][1]])
             else if this.sheet[A_Index][2] = 5
-                str_sheet .= Format("[{1:s}]", this.sheet[A_Index][1])
+                str_sheet .= Format("[{1:s}]", this.note_dic[this.sheet[A_Index][1]])
             else if this.sheet[A_Index][2] = 4
-                str_sheet .= this.sheet[A_Index][1]
+                str_sheet .= this.note_dic[this.sheet[A_Index][1]]
             ; 这if用来回写成一样的格式，主要是插入空白字符
             ; parser没有写对应于空白字符的解析只是跳过了
             ; 所以先注释掉
