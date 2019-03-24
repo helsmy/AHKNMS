@@ -7,31 +7,13 @@ It will parse a number music sheet into a list as follow:
     [["Pitch"， "Range", "Duration"], ......]
 ```
 
-### ver 0.0.1
+## HELP 
 
-1. add main.ahk
-2. add parser.ahk
-3. initially completed parser.ahk
+1. Double Click main.ahk to start program
+2. Ctrl + v to paste number sheet into original
+3. Button "key up" or "key down" to shift key
+4. Result wil display in the Converted Box
 
-### ver 0.0.2
+### ver 0.1.0
 
-1. fix parser.ahk.
-2. make a Gui helloworld
-
-### ver 0.0.3
-
-1. parser is usable now.
-
-### ver 0.0.4
-
-1. parser can parse "#" and "b"
-
-### ver 0.0.5
-
-1. add sheet.ahk (deal with music sheet generate by parser)
-2. fix parser.ahk
-
-### ver 0.0.6
-
-1. add parse support for [PITCH, PITCH, ...]
-2. add NSPush method to sheet.ahk
+1. Finish key shifter
