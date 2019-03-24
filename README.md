@@ -17,3 +17,7 @@ It will parse a number music sheet into a list as follow:
 ### ver 0.1.0
 
 1. Finish key shifter
+
+### ver 0.1.1
+
+1. Add parse for range 2 and 6
