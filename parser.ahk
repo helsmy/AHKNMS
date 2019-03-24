@@ -2,7 +2,8 @@
 
 #Include sheet.ahk
 
-global LHIGH := "[", RHIGH := "]", NOTE := "INT", EOF := "EOF", LLOW := "(", RLOW := ")", HALFUP := 1, HALFDOWN := -1
+global LHIGH := "LHIGH", RHIGH := "RHIGH", NOTE := "INT", EOF := "EOF", LLOW := "LLOW", RLOW := "RLOW", HALFUP := 1, HALFDOWN := -1, LDHIGH := "LDHIGH", RDHIGH := "RDHIGH"
+global LDLOW := "LDLOW", RDLOW := "RDLOW"
 
 ; stand form : notelist := [[pitch, range, duration], ...]
 ; duration 还没有实现格式与解析先置0
@@ -152,6 +153,18 @@ class Parser
             result := this.Pitch(3)
             this.Eat("RLOW")
         }
+        else if this.current_char.types == LDHIGH
+		{
+			this.Eat(LDHIGH)
+			result := this.Pitch(6)
+			this.Eat(RDHIGH)
+		}
+		else if this.current_char.types == LDLOW
+		{
+			this.Eat(LDLOW)
+			result := this.Pitch(2)
+			this.Eat(RDLOW)
+		}
         else ; if this.current_char.types == NOTE||HALFUP||HALFDOWN
         {
             result := this.Pitch(4)
