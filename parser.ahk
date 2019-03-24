@@ -96,10 +96,8 @@ class Lexer
 
 class Parser
 {
-    __New(str)
+    __New()
     {
-        this.lexer := new Lexer(str)
-        this.current_char := this.lexer.GetNextToken()
         this.note_dic := {1:1, 2:3, 3:5, 4:6, 5:8, 6:10, 7:12}
     }
     
@@ -170,5 +168,12 @@ class Parser
             result.NSPush(n)
         }
         return result
+    }
+    NSParse(str)
+    {
+        this.lexer := new Lexer(str)
+        this.current_char := this.lexer.GetNextToken()
+        r := this.Sheet()
+        return r
     }
 }
