@@ -54,7 +54,6 @@ class Lexer
     {
         refresh:
         cc := this.current_char
-        t := New Token("", "")
         
         while(cc != "")
         {
@@ -64,34 +63,29 @@ class Lexer
                 goto refresh        ; 我用goto我有罪，是我太菜了
             }
             
+            else if cc is alpha
+                return this._id()
+            
             else if cc is digit
             {
                 this.Advance()
-                t.types := NOTE
+                return new Token(NOTE, cc)
                 
             }
-            ; 直接返回音区，默认中央C为C4
             
             else
             {
-                for k,v in this.char_list
+                t := this.char_list[cc]
+                if t is Space
+                    this.ErrInvalidchar()
+                else
                 {
-                    if(v == this.current_char)
-                    {
-                        this.Advance()
-                        t.types := k
-                        goto setvalue    ; 我用goto我有罪，是我太菜了
-                    }
+                    this.Advance()
+                    return new token(t, cc)
                 }
-                this.ErrInvalidchar()
             }
-            setvalue:
-            t.values := cc
-            return t
         }
-        t.types := EOF
-        t.values := ""
-        return t
+        return new Token(EOF, "")
     }
 }
 
