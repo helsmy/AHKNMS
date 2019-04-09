@@ -63,9 +63,6 @@ class Lexer
                 goto refresh        ; 我用goto我有罪，是我太菜了
             }
             
-            else if cc is alpha
-                return this._id()
-            
             else if cc is digit
             {
                 this.Advance()
