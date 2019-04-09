@@ -10,7 +10,7 @@
 @C120: Number Sheet @G: Number Sheet ; 不改变部分可以省略不写
 ```
 
-### 方式二
+### 方式二 √
 
 ```
 NMSBEGIN
