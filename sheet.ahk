@@ -4,11 +4,17 @@
 class NumSheet
 {
     ; 乐谱类
+    this.note_dic := {1:1,2:"#1",3:2,4:"#2",5:3,6:4,7:"#4",8:5,9:"#5",10:6,11:"#6",12:7}
+    
     __New()
     {
+        ; sheet : [[pitch,range,duration, *]
+        ; command_list : [[command(dict), ordinal], *]
+        ; command_flag : command_ordinal
         this.sheet := []
+        this.command_list := []
         this.len := this.sheet.Count()
-        this.note_dic := {1:1,2:"#1",3:2,4:"#2",5:3,6:4,7:"#4",8:5,9:"#5",10:6,11:"#6",12:7}
+        this.command_flag := 0
     }
     
     NSPush(note)
@@ -19,6 +25,12 @@ class NumSheet
             this.sheet.Push(note[A_Index])
         }
         this.len += len
+    }
+    
+    AddCommand(command_list)
+    {
+        ; push command_list : command, ordinal
+        this.command_list.Push([command_list[1],this.len+1])
     }
     
     GetNote(ordinal := 1)
