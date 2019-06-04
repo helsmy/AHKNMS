@@ -17,3 +17,11 @@ It will parse a number music sheet into a list as follow:
 ### ver 0.1.0
 
 1. Finish key shifter
+
+### ver 0.1.2
+
+1. Finish parse of sheet attribution statement
+
+### ver 0.1.3
+
+1. Finish parse of extend set
