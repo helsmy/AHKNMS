@@ -4,9 +4,13 @@
 
 #Include sheet.ahk
 
-global LHIGH := "LHIGH", RHIGH := "RHIGH", NOTE := "INT", EOF := "EOF", LLOW := "LLOW", RLOW := "RLOW"
-    , HALFUP := 1, HALFDOWN := -1, LDHIGH := "LDHIGH", RDHIGH := "RDHIGH", LDLOW := "LDLOW"
-    , RDLOW := "RDLOW", ASSIGN := "ASSIGN", BEGIN := "BEGIN", END := "END", SLASH := "SLASH"
+
+global LHIGH := "LHIGH", RHIGH := "RHIGH", NOTE := "INT", EOF := "EOF", LLOW := "LLOW", RLOW := "RLOW", HALFUP := 1, HALFDOWN := -1, LDHIGH := "LDHIGH", RDHIGH := "RDHIGH"
+global LDLOW := "LDLOW", RDLOW := "RDLOW"
+
+; stand form : notelist := [[pitch, range, duration], ...]
+; duration 还没有实现格式与解析先置0
+; duration is temporarily set to 0
 
 class Token
 {
@@ -132,7 +136,11 @@ class Lexer
     
     GetNextToken()
     {
-        while((cc := this.current_char) != "")
+
+        refresh:
+        cc := this.current_char
+        
+        while(cc != "")
         {
             if cc is Space
             {
@@ -148,39 +156,22 @@ class Lexer
             else if cc is digit
             {
                 this.Advance()
-                return new Token(NOTE, cc)
+                return new Token(NOTE, cc)  
             }
-            
-            else if InStr("-", cc)
-                return this.Sustain()
             
             else
             {
-                if this.char_list.HasKey(cc)
+                t := this.char_list[cc]
+                if t is Space
+                    this.ErrInvalidchar()
+                else
                 {
                     this.Advance()
-                    return new token(this.char_list[cc], cc)
+                    return new token(t, cc)
                 }
-                else
-                    this.ErrInvalidchar()
             }
         }
         return new Token(EOF, "")
-    }
-    
-    StatementGNT()
-    {
-        ; 声明语句块专用的get_next_token
-        cc := this.current_char
-        while InStr(" `t`r`n", cc)
-        {
-            this.Advance()
-            cc := this.current_char
-        }
-        if cc is digit
-            return this.Num()
-        else
-            return this.GetNextToken()
     }
 }
 
@@ -271,6 +262,18 @@ class Parser
             result := this.Pitch(2, duration)
             this.Eat(RDLOW)
         }
+        else if this.current_char.types == LDHIGH
+		{
+			this.Eat(LDHIGH)
+			result := this.Pitch(6)
+			this.Eat(RDHIGH)
+		}
+		else if this.current_char.types == LDLOW
+		{
+			this.Eat(LDLOW)
+			result := this.Pitch(2)
+			this.Eat(RDLOW)
+		}
         else ; if this.current_char.types == NOTE||HALFUP||HALFDOWN
         {
             result := this.Pitch(4, duration)

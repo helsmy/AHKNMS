@@ -1,38 +1,28 @@
 # AHKNMS
-主要是觉得为上b碗下模型建个github账号实在是太zz了，所以就放点东西在上面好了<br><br>
+Autohotkey Number Music Sheet 的缩写我也不知道这个拼写对不对23333<br>
+<br>
+主要是觉得为上b碗下模型建个github账号实在是太zz了，所以就放点东西在上面好了<br>
+<br>
 主要就是一个可以解析数字谱的东西，会把一个标准的数字谱转换成一个如下的列表<br>
 
 ```autohotkey
     [["音高"， "音区", "时值"], ......]
 ```
 
-初步打算实现一个转调器的功能，并写一个简陋的UI
+初步打算实现一个转调器的功能，并写一个简陋的UI<br>
+之后可能扩展数字谱的符号集，让数字谱可以在保持一定的可读性和方便传播性的基础上可以完整的表示一个简谱
 
-### ver 0.0.1
+## 帮助
 
-1. 加入了 main.ahk 和 paser.ahk 
-2. 大概把 parser.ahk 写完了，还没有测试过
+1. 双击 main.ahk 打开程序
+2. Ctrl + v 把数字谱粘贴到 Original
+3. 用 "key up" or "key down" 按钮来升降key
+4. 结果会显示在 Converted 文本框里
 
-### ver 0.0.2
+### ver 0.1.0
 
-1. 修了下 parser.ahk ，还没有测试过解析功能
-2. 让 main.ahk 有个Gui的 helloworld 了
+1. 完成了转调器
 
-### ver 0.0.3
+### ver 0.1.1
 
-1. parser.ahk 终于可以正确解析了，是我太菜了
-
-### ver 0.0.4
-
-1. parser.ahk 可以解析临时升降号了
-2. parser 现在会将音高解析成12平均律的12个半音
-
-### ver 0.0.5
-
-1. 加入了 sheet.ahk （用来处理解析到的乐谱）
-2. 改了下 parser.ahk 让parser返回一个 NumSheet 的实例
-
-### ver 0.0.6
-
-1. 可以解析 [PITCH, PITCH, ...] 的类型了
-2. 给sheet.ahk加了 NSPush method 
+1. 加入了对于音区 2 和 6 的解析和回写
