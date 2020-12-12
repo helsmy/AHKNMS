@@ -13,11 +13,3 @@ It will parse a number music sheet into a list as follow:
 2. Ctrl + v to paste number sheet into original
 3. Button "key up" or "key down" to shift key
 4. Result wil display in the Converted Box
-
-### ver 0.1.0
-
-1. Finish key shifter
-
-### ver 0.1.1
-
-1. Add parse for range 2 and 6
